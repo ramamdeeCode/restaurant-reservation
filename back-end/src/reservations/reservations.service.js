@@ -18,7 +18,15 @@ async function searchList(mobile_number) {
     .orderBy("reservation_date");
 }
 
+function create(reservation) {
+  return knex("reservations")
+    .insert(reservation)
+    .returning("*")
+    .then((createdRecords) => createdRecords[0]);
+}
+
 module.exports = {
   list,
   searchList,
+  create,
 };
