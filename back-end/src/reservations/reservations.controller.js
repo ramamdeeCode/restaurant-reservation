@@ -13,6 +13,16 @@ async function list(req, res) {
   res.json({ data });
 }
 
+function getDateFromQuery(req, res, next) {
+  let today = new Date();
+  today = `${today.getFullYear().toString(10)}-${(today.getMonth() + 1)
+    .toString(10)
+    .padStart(2, "0")}-${today.getDate().toString(10).padStart(2, "0")}`;
+  const date = req.query.date || today;
+  res.locals.date = date;
+  next();
+}
+
 module.exports = {
-  list: [asyncErrorBoundary(list)],
+  list: [getDateFromQuery, asyncErrorBoundary(list)],
 };
