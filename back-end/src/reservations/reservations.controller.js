@@ -13,6 +13,42 @@ async function list(req, res) {
   res.json({ data });
 }
 
+async function create(req, res) {
+  let reservation = req.body.data;
+  reservation = { ...reservation, status: "booked" };
+  const data = await service.create(reservation);
+  res.status(201).json({ data });
+}
+
+const VALID_PROPERTIES = [
+  "first_name",
+  "last_name",
+  "people",
+  "reservation_date",
+  "reservation_time",
+  "mobile_number",
+  "status",
+  "created_at",
+  "updated_at",
+  "reservation_id",
+];
+
+function hasOnlyValidProperties(req, res, next) {
+  const { data = {} } = req.body;
+
+  const invalidFields = Object.keys(data).filter(
+    (field) => !VALID_PROPERTIES.includes(field)
+  );
+
+  if (invalidFields.length) {
+    return next({
+      status: 400,
+      message: `Invalid field(s): ${invalidFields.join(", ")}`,
+    });
+  }
+  next();
+}
+
 function getMobileNumberFromQuery(req, res, next) {
   const mobileNumber = req.query.mobile_number;
   if (mobileNumber) {
@@ -33,4 +69,5 @@ function getDateFromQuery(req, res, next) {
 
 module.exports = {
   list: [getMobileNumberFromQuery, getDateFromQuery, asyncErrorBoundary(list)],
+  create: [asyncErrorBoundary(create)],
 };
