@@ -13,6 +13,14 @@ async function list(req, res) {
   res.json({ data });
 }
 
+function getMobileNumberFromQuery(req, res, next) {
+  const mobileNumber = req.query.mobile_number;
+  if (mobileNumber) {
+    res.locals.mobileNumber = mobileNumber;
+  }
+  next();
+}
+
 function getDateFromQuery(req, res, next) {
   let today = new Date();
   today = `${today.getFullYear().toString(10)}-${(today.getMonth() + 1)
@@ -24,5 +32,5 @@ function getDateFromQuery(req, res, next) {
 }
 
 module.exports = {
-  list: [getDateFromQuery, asyncErrorBoundary(list)],
+  list: [getMobileNumberFromQuery, getDateFromQuery, asyncErrorBoundary(list)],
 };
