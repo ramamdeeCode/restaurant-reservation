@@ -1,5 +1,6 @@
 const service = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
+const hasProperties = require("../errors/hasProperties");
 
 /**
  * List handler for reservation resources
@@ -48,6 +49,17 @@ function hasOnlyValidProperties(req, res, next) {
   }
   next();
 }
+
+const REQUIRED_PROPERTIES = [
+  "first_name",
+  "last_name",
+  "people",
+  "reservation_date",
+  "reservation_time",
+  "mobile_number",
+];
+
+const hasRequiredProperties = hasProperties(...REQUIRED_PROPERTIES);
 
 function getMobileNumberFromQuery(req, res, next) {
   const mobileNumber = req.query.mobile_number;
