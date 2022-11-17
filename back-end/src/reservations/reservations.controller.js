@@ -44,6 +44,17 @@ async function update(req, res) {
   res.json({ data });
 }
 
+async function updateStatus(req, res) {
+  const { status, reservation } = res.locals;
+  const updatedReservation = {
+    ...reservation,
+    status,
+  };
+  const result = await service.updateStatus(updatedReservation);
+  const data = result[0];
+  res.json({ data });
+}
+
 async function reservationExists(req, res, next) {
   const { reservation_id } = req.params;
   const reservation = await service.read(reservation_id);
@@ -232,6 +243,20 @@ function getMobileNumberFromQuery(req, res, next) {
   next();
 }
 
+function hasOnlyStatusProperty(req, res, next) {
+  const { data = {} } = req.body;
+  const invalidFields = Object.keys(data).filter(
+    (field) => !["status"].includes(field)
+  );
+  if (invalidFields.length) {
+    return next({
+      status: 400,
+      message: `Invalid field(s): ${invalidFields.join(", ")}`,
+    });
+  }
+  next();
+}
+
 function getDateFromQuery(req, res, next) {
   let today = new Date();
   today = `${today.getFullYear().toString(10)}-${(today.getMonth() + 1)
@@ -258,6 +283,14 @@ module.exports = {
   ],
   read: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(read)],
 
+  updateStatus: [
+    hasOnlyStatusProperty,
+    hasStatusProperty,
+    statusIsValid,
+    asyncErrorBoundary(reservationExists),
+    currentStatusIsNotFinished,
+    asyncErrorBoundary(updateStatus),
+  ],
   update: [
     asyncErrorBoundary(reservationExists),
     hasOnlyValidProperties,
