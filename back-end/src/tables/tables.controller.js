@@ -18,8 +18,14 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
+function getCapacity(req, res, next) {
+  const capacity = req.query.capacity || 99999;
+  res.locals.capacity = capacity;
+  next();
+}
+
 module.exports = {
   list: [asyncErrorBoundary(list)],
-  listFree: [asyncErrorBoundary(listFree)],
+  listFree: [getCapacity, asyncErrorBoundary(listFree)],
   create: [asyncErrorBoundary(create)],
 };
