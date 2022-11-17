@@ -21,6 +21,35 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
+function timeIsValid(req, res, next) {
+  const { reservation_time } = req.body.data;
+
+  const pattern = /^[0-9]{2}:[0-9]{2}?(:[0-9]{2})$/;
+  if (pattern.test(reservation_time));
+  {
+    let divided = reservation_time.split(":");
+
+    const hour = Number(divided[0]);
+    const minute = Number(divided[1]);
+    const seconds = Number(divided[2]) || 0;
+
+    if (
+      hour >= 0 &&
+      hour <= 23 &&
+      minute >= 0 &&
+      minute <= 59 &&
+      seconds >= 0 &&
+      seconds <= 59
+    ) {
+      return next();
+    }
+  }
+  return next({
+    status: 400,
+    message: `reservation_time must be a valid time`,
+  });
+}
+
 function dateIsValid(req, res, next) {
   const { reservation_date } = req.body.data;
   if (
