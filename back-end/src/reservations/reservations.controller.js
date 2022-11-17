@@ -267,6 +267,17 @@ function hasStatusProperty(req, res, next) {
   });
 }
 
+function currentStatusIsNotFinished(req, res, next) {
+  const { status } = res.locals.reservation;
+  if (status === "finished") {
+    return next({
+      status: 400,
+      message: `Reservations that are finished cannot be updated.`,
+    });
+  }
+  next();
+}
+
 function statusIsValid(req, res, next) {
   const { status } = req.body.data;
   const validStatus = ["booked", "seated", "finished", "cancelled"];
