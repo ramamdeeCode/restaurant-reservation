@@ -44,6 +44,7 @@ const REQUIRED_PROPERTIES = ["table_name", "capacity"];
 
 const hasRequiredProperties = hasProperties(...REQUIRED_PROPERTIES);
 
+// table name must be at least 2 characters long
 function tableNameIsValid(req, res, next) {
   const { table_name } = req.body.data;
   const length = table_name.length;
@@ -57,6 +58,16 @@ function tableNameIsValid(req, res, next) {
   });
 }
 
+function capacityIsPositiveInteger(req, res, next) {
+  let { capacity } = req.body.data;
+  return capacity > 0 && Number.isInteger(capacity)
+    ? next()
+    : next({
+        status: 400,
+        message: `Invalid capacity field. Capacity must be a positive integer greater than 0`,
+      });
+}
+
 module.exports = {
   list: [asyncErrorBoundary(list)],
   listFree: [getCapacity, asyncErrorBoundary(listFree)],
@@ -64,6 +75,7 @@ module.exports = {
     hasOnlyValidProperties,
     hasRequiredProperties,
     tableNameIsValid,
+    capacityIsPositiveInteger,
     asyncErrorBoundary(create),
   ],
 };
