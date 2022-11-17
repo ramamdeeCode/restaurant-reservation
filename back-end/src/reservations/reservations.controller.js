@@ -21,6 +21,17 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
+function statusIsBooked(req, res, next) {
+  const { status } = req.body.data;
+  if (status === "booked" || !status) {
+    return next();
+  }
+  next({
+    status: 400,
+    message: `"${status}" is not a valid status. New Reservations must have a status of "booked"`,
+  });
+}
+
 function restaurantIsOpen(req, res, next) {
   let isOpen = false;
   const { reservation_time } = req.body.data;
