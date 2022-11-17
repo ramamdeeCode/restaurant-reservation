@@ -256,6 +256,16 @@ function hasOnlyStatusProperty(req, res, next) {
   }
   next();
 }
+function hasStatusProperty(req, res, next) {
+  const { data = {} } = req.body;
+  if (data.status) {
+    return next();
+  }
+  next({
+    status: 400,
+    message: `status is a required field`,
+  });
+}
 
 function getDateFromQuery(req, res, next) {
   let today = new Date();
