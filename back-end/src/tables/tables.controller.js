@@ -162,6 +162,16 @@ function hasCapacity(req, res, next) {
       });
 }
 
+function tableIsFree(req, res, next) {
+  const { reservation_id } = res.locals.table;
+  return reservation_id
+    ? next({
+        status: 400,
+        message: `This table is occupied.`,
+      })
+    : next();
+}
+
 module.exports = {
   list: [asyncErrorBoundary(list)],
   listFree: [getCapacity, asyncErrorBoundary(listFree)],
@@ -180,6 +190,7 @@ module.exports = {
     reservationIsBooked,
     asyncErrorBoundary(tableExists),
     hasCapacity,
+    tableIsFree,
     asyncErrorBoundary(seat),
   ],
 };
