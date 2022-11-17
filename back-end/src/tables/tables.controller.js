@@ -124,6 +124,17 @@ async function reservationIdExists(req, res, next) {
   });
 }
 
+function reservationIsBooked(req, res, next) {
+  const { status } = res.locals.reservation;
+
+  return status === "booked"
+    ? next()
+    : next({
+        status: 400,
+        message: `Reservation status ${status} is not valid`,
+      });
+}
+
 module.exports = {
   list: [asyncErrorBoundary(list)],
   listFree: [getCapacity, asyncErrorBoundary(listFree)],
@@ -139,6 +150,7 @@ module.exports = {
     hasReservationId,
     hasOnlyReservationId,
     asyncErrorBoundary(reservationIdExists),
+    reservationIsBooked,
     asyncErrorBoundary(seat),
   ],
 };
