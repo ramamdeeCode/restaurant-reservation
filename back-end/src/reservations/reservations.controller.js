@@ -34,6 +34,19 @@ async function read(req, res) {
   res.json({ data });
 }
 
+async function reservationExists(req, res, next) {
+  const { reservation_id } = req.params;
+  const reservation = await service.read(reservation_id);
+  if (reservation) {
+    res.locals.reservation = reservation;
+    return next();
+  }
+  next({
+    status: 404,
+    message: `Reservation ${reservation_id} cannot be found.`,
+  });
+}
+
 function statusIsBooked(req, res, next) {
   const { status } = req.body.data;
   if (status === "booked" || !status) {
@@ -233,5 +246,5 @@ module.exports = {
     statusIsBooked,
     asyncErrorBoundary(create),
   ],
-  read: [asyncErrorBoundary(read)],
+  read: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(read)],
 };
