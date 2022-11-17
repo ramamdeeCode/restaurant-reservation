@@ -1,5 +1,6 @@
 const service = require("./tables.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
+const hasProperties = require("../errors/hasProperties");
 
 async function list(req, res) {
   const data = await service.list();
@@ -39,9 +40,16 @@ function hasOnlyValidProperties(req, res, next) {
   }
   next();
 }
+const REQUIRED_PROPERTIES = ["table_name", "capacity"];
+
+const hasRequiredProperties = hasProperties(...REQUIRED_PROPERTIES);
 
 module.exports = {
   list: [asyncErrorBoundary(list)],
   listFree: [getCapacity, asyncErrorBoundary(listFree)],
-  create: [hasOnlyValidProperties, asyncErrorBoundary(create)],
+  create: [
+    hasOnlyValidProperties,
+    hasRequiredProperties,
+    asyncErrorBoundary(create),
+  ],
 };
