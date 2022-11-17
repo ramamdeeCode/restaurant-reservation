@@ -6,6 +6,14 @@ async function list(req, res) {
   res.json({ data });
 }
 
+// list tables that are not occupied (reservation_id is null)
+async function listFree(req, res) {
+  // const capacity = res.locals.capacity;  //filters list of tables by capacity. This functionality breaks testing but I want to implement it for portfolio.
+  const data = await service.listFree(/* capacity */);
+  res.json({ data });
+}
+
 module.exports = {
   list: [asyncErrorBoundary(list)],
+  listFree: [asyncErrorBoundary(listFree)],
 };
