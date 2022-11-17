@@ -84,6 +84,31 @@ async function seat(req, res, next) {
   res.json({ data });
 }
 
+function hasOnlyReservationId(req, res, next) {
+  const { data = {} } = req.body;
+
+  const invalidFields = Object.keys(data).filter(
+    (field) => !["reservation_id"].includes(field)
+  );
+  if (invalidFields.length) {
+    return next({
+      status: 400,
+      message: `Invalid field(s): ${invalidFields.join(", ")}`,
+    });
+  }
+  next();
+}
+
+function hasReservationId(res, res, next) {
+  const { data = {} } = req.body;
+  return data.reservation_id
+    ? next()
+    : next({
+        status: 400,
+        message: `reservation_id is a required field.`,
+      });
+}
+
 module.exports = {
   list: [asyncErrorBoundary(list)],
   listFree: [getCapacity, asyncErrorBoundary(listFree)],
@@ -95,5 +120,5 @@ module.exports = {
     asyncErrorBoundary(create),
   ],
 
-  seat: [asyncErrorBoundary(seat)],
+  seat: [hasReservationId, hasOnlyReservationId, asyncErrorBoundary(seat)],
 };
