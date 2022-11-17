@@ -21,6 +21,20 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
+function dateIsNotTuesday(req, res, next) {
+  const { reservation_date } = req.body.data;
+  let [year, month, date] = reservation_date.split("-");
+  month -= 1;
+  const day = new Date(year, month, date).getDay();
+  if (day !== 2) {
+    return next();
+  }
+  return next({
+    status: 400,
+    message: `We are closed on Tuesdays`,
+  });
+}
+
 function timeIsValid(req, res, next) {
   const { reservation_time } = req.body.data;
 
