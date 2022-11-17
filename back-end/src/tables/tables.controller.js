@@ -149,6 +149,19 @@ async function tableExists(req, res, next) {
   });
 }
 
+//checks if the tables capacity is enough for the reservaion's people
+function hasCapacity(req, res, next) {
+  const { capacity } = res.locals.table;
+  const { people } = res.locals.reservation;
+
+  return capacity >= people
+    ? next()
+    : next({
+        status: 400,
+        message: `This Reservation requires a capacity of at least ${people}.`,
+      });
+}
+
 module.exports = {
   list: [asyncErrorBoundary(list)],
   listFree: [getCapacity, asyncErrorBoundary(listFree)],
@@ -166,6 +179,7 @@ module.exports = {
     asyncErrorBoundary(reservationIdExists),
     reservationIsBooked,
     asyncErrorBoundary(tableExists),
+    hasCapacity,
     asyncErrorBoundary(seat),
   ],
 };
