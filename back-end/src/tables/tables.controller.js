@@ -68,6 +68,22 @@ function capacityIsPositiveInteger(req, res, next) {
       });
 }
 
+//updates table and reservation at the same time.
+//table is assigned a reservation_id
+//reservation is given a status of "seated"
+async function seat(req, res, next) {
+  const updatedTable = {
+    ...res.locals.table,
+    ...req.body.data,
+  };
+  const updatedReservation = {
+    ...res.locals.reservation,
+    status: "seated",
+  };
+  const data = await service.update(updatedTable, updatedReservation);
+  res.json({ data });
+}
+
 module.exports = {
   list: [asyncErrorBoundary(list)],
   listFree: [getCapacity, asyncErrorBoundary(listFree)],
@@ -78,4 +94,6 @@ module.exports = {
     capacityIsPositiveInteger,
     asyncErrorBoundary(create),
   ],
+
+  seat: [asyncErrorBoundary(seat)],
 };
