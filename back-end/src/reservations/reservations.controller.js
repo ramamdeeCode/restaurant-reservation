@@ -267,6 +267,20 @@ function hasStatusProperty(req, res, next) {
   });
 }
 
+function statusIsValid(req, res, next) {
+  const { status } = req.body.data;
+  const validStatus = ["booked", "seated", "finished", "cancelled"];
+
+  if (validStatus.includes(status)) {
+    res.locals.status = status;
+    return next();
+  }
+  next({
+    status: 400,
+    message: `${status} is not a valid status. Status must be booked, seated, or finished`,
+  });
+}
+
 function getDateFromQuery(req, res, next) {
   let today = new Date();
   today = `${today.getFullYear().toString(10)}-${(today.getMonth() + 1)
