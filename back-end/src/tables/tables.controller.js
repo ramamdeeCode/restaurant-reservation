@@ -44,12 +44,26 @@ const REQUIRED_PROPERTIES = ["table_name", "capacity"];
 
 const hasRequiredProperties = hasProperties(...REQUIRED_PROPERTIES);
 
+function tableNameIsValid(req, res, next) {
+  const { table_name } = req.body.data;
+  const length = table_name.length;
+
+  if (length >= 2) {
+    return next();
+  }
+  return next({
+    status: 400,
+    message: `Invalid table_name field. table_name must be at least 2 characters long`,
+  });
+}
+
 module.exports = {
   list: [asyncErrorBoundary(list)],
   listFree: [getCapacity, asyncErrorBoundary(listFree)],
   create: [
     hasOnlyValidProperties,
     hasRequiredProperties,
+    tableNameIsValid,
     asyncErrorBoundary(create),
   ],
 };
