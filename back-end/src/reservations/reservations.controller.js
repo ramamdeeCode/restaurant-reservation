@@ -21,6 +21,19 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
+async function read(req, res) {
+  const { reservation } = res.locals;
+  let date = reservation.reservation_date;
+  date = `${date.getFullYear().toString(10)}-${(date.getMonth() + 1)
+    .toString(10)
+    .padStart(2, "0")}-${date.getDate().toString(10).padStart(2, "0")}`;
+  const data = {
+    ...reservation,
+    reservation_date: date,
+  };
+  res.json({ data });
+}
+
 function statusIsBooked(req, res, next) {
   const { status } = req.body.data;
   if (status === "booked" || !status) {
@@ -220,4 +233,5 @@ module.exports = {
     statusIsBooked,
     asyncErrorBoundary(create),
   ],
+  read: [asyncErrorBoundary(read)],
 };
