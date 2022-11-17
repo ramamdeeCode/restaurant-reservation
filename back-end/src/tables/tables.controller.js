@@ -135,6 +135,20 @@ function reservationIsBooked(req, res, next) {
       });
 }
 
+async function tableExists(req, res, next) {
+  const tableId = req.params.table_id;
+  const table = await service.read(tableId);
+
+  if (table) {
+    res.locals.table = table;
+    return next();
+  }
+  next({
+    status: 404,
+    message: `Table ${tableId} cannot be found.`,
+  });
+}
+
 module.exports = {
   list: [asyncErrorBoundary(list)],
   listFree: [getCapacity, asyncErrorBoundary(listFree)],
@@ -151,6 +165,7 @@ module.exports = {
     hasOnlyReservationId,
     asyncErrorBoundary(reservationIdExists),
     reservationIsBooked,
+    asyncErrorBoundary(tableExists),
     asyncErrorBoundary(seat),
   ],
 };
