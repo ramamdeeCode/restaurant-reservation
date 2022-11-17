@@ -21,6 +21,20 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
+function dateIsValid(req, res, next) {
+  const { reservation_date } = req.body.data;
+  if (
+    new Date(reservation_date) !== "Invalid Date" &&
+    !isNaN(new Date(reservation_date))
+  ) {
+    return next();
+  }
+  return next({
+    status: 400,
+    message: `reservation_date must be a valid date`,
+  });
+}
+
 function peopleIsPositiveInteger(req, res, next) {
   let { people } = req.body.data;
 
