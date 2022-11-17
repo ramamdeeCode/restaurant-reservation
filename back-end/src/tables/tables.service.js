@@ -16,7 +16,15 @@ async function listFree(/* minCapacity */) {
   );
 }
 
+async function create(table) {
+  return knex("table")
+    .insert(table)
+    .returning("*")
+    .then((createdRecords) => createdRecords[0]);
+}
+
 module.exports = {
   list,
   listFree,
+  create,
 };
