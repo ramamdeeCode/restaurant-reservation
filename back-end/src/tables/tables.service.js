@@ -23,8 +23,13 @@ async function create(table) {
     .then((createdRecords) => createdRecords[0]);
 }
 
+async function read(table_id) {
+  return knex("table").select("*").where({ table_id }).first();
+}
+
 module.exports = {
   list,
   listFree,
   create,
+  read,
 };
