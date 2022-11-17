@@ -21,6 +21,18 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
+function peopleIsPositiveInteger(req, res, next) {
+  let { people } = req.body.data;
+
+  if (people > 0 && Number.isInteger(people)) {
+    return next();
+  }
+  return next({
+    status: 400,
+    message: `Invalid people field. People must be a positive integer greater than 0`,
+  });
+}
+
 const VALID_PROPERTIES = [
   "first_name",
   "last_name",
