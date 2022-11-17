@@ -208,5 +208,16 @@ function getDateFromQuery(req, res, next) {
 
 module.exports = {
   list: [getMobileNumberFromQuery, getDateFromQuery, asyncErrorBoundary(list)],
-  create: [asyncErrorBoundary(create)],
+  create: [
+    hasOnlyValidProperties,
+    hasRequiredProperties,
+    peopleIsPositiveInteger,
+    dateIsValid,
+    timeIsValid,
+    dateIsNotTuesday,
+    dateIsFuture,
+    restaurantIsOpen,
+    statusIsBooked,
+    asyncErrorBoundary(create),
+  ],
 };
