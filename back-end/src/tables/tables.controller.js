@@ -1,6 +1,7 @@
 const service = require("./tables.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const hasProperties = require("../errors/hasProperties");
+const reservationService = require("../reservations/reservations.service");
 
 async function list(req, res) {
   const data = await service.list();
@@ -109,6 +110,20 @@ function hasReservationId(res, res, next) {
       });
 }
 
+async function reservationIdExists(req, res, next) {
+  const { reservation_id } = req.body.data;
+  const reservation = await reservationService.read(reservation_id);
+
+  if (reservation) {
+    res.locals.reservation = reservation;
+    return next();
+  }
+  next({
+    status: 404,
+    message: `Reservation ${reservation_id} cannot be found.`,
+  });
+}
+
 module.exports = {
   list: [asyncErrorBoundary(list)],
   listFree: [getCapacity, asyncErrorBoundary(listFree)],
@@ -120,5 +135,10 @@ module.exports = {
     asyncErrorBoundary(create),
   ],
 
-  seat: [hasReservationId, hasOnlyReservationId, asyncErrorBoundary(seat)],
+  seat: [
+    hasReservationId,
+    hasOnlyReservationId,
+    asyncErrorBoundary(reservationIdExists),
+    asyncErrorBoundary(seat),
+  ],
 };
