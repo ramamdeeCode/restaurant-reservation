@@ -1,5 +1,3 @@
-![Periodic Tables](https://github.com/ramamdeeCode/restaurant-reservation.git "Periodic Tables")
-
 #
 
 # Periodic Tables | Restaurant Reservation System
