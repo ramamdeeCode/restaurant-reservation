@@ -126,3 +126,19 @@ export function getDisplayDate(date) {
   displayDate.display = `${displayDate.day}, ${displayDate.month} ${displayDate.date} ${displayDate.year}`;
   return displayDate;
 }
+
+/**
+ * converts a time to display format (5:37pm).
+ * @param time
+ *  a time string in HH:MM:SS or HH:MM format
+ * @returns {string}
+ *  the time in a format that can be displayed.
+ */
+export function getDisplayTime(time) {
+  let [hour, minute] = time.split(":");
+  hour = Number(hour);
+  const amPm = hour <= 11 ? "am" : "pm";
+  hour = hour <= 12 ? hour : hour - 12;
+  hour = hour === 0 ? 12 : hour;
+  return hour + ":" + minute + amPm;
+}
