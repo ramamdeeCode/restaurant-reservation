@@ -26,6 +26,8 @@ function getCapacity(req, res, next) {
   next();
 }
 
+const VALID_PROPERTIES = ["table_name", "capacity", "reservation_id"];
+
 function hasOnlyValidProperties(req, res, next) {
   const { data = {} } = req.body;
 
