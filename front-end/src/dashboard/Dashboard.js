@@ -30,7 +30,7 @@ function Dashboard({ date }) {
   const [displayReservations, setDisplayReservations] = useState(<Loading />);
   const [displayTables, setDisplayTables] = useState(<Loading />);
 
-  useEffect(loadDashboard, [date]);
+  useEffect(loadReservations, [date]);
   useEffect(loadTables, [reservations]);
 
   //when reservations are loaded, display either list of reservations, or alert that no reservations are on this date
@@ -42,7 +42,7 @@ function Dashboard({ date }) {
             <span key={index}>
               <ReservationCard
                 reservation={reservation}
-                loadReservations={loadDashboard}
+                loadReservations={loadReservations}
               />
             </span>
           );
@@ -65,7 +65,7 @@ function Dashboard({ date }) {
         tables.map((table, index) => {
           return (
             <span key={index}>
-              <TableCard table={table} loadReservations={loadDashboard} />
+              <TableCard table={table} loadReservations={loadReservations} />
             </span>
           );
         })
@@ -80,7 +80,7 @@ function Dashboard({ date }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tables]);
 
-  function loadDashboard() {
+  function loadReservations() {
     setDisplayReservations(<Loading />);
 
     const abortController = new AbortController();
