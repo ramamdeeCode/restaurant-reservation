@@ -190,3 +190,25 @@ export async function unassignTable(table_id, signal) {
   };
   return await fetchJson(url, options);
 }
+
+/**
+ * Updates an existing reservation's status.
+ * @param reservation_id
+ *  the id of the reservation to be updated.
+ * @param status
+ *  the new status of the reservation.
+ * @param signal
+ *  optional AbortController.signal
+ * @returns {Promise<Error|*>}
+ *  a promise that resolves to the updated reservation.
+ */
+export async function changeStatus(reservation_id, status, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({ data: { status } }),
+    signal,
+  };
+  return await fetchJson(url, options, { status });
+}
