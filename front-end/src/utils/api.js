@@ -109,3 +109,15 @@ export async function createTable(table, signal) {
   };
   return await fetchJson(url, options, {});
 }
+
+/**
+ * Retrieves all tables.
+ * @param signal
+ *  optional AbortController.signal
+ * @returns {Promise<[table]>}
+ *  a promise that resolves to a possible empty array of tables from the database.
+ */
+export async function listTables(signal) {
+  const url = new URL(`${API_BASE_URL}/tables`);
+  return await fetchJson(url, { signal }, []);
+}
