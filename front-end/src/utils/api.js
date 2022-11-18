@@ -88,3 +88,24 @@ export async function createReservation(reservation, signal) {
   };
   return await fetchJson(url, options, {});
 }
+
+/**
+ * Saves table to the database.
+ * @param table
+ *  the table to save
+ * @param signal
+ *  optional AbortController.signal
+ * @returns {Promise<table>}
+ *  a promise that resolves the saved table, which will now have an `id` property.
+ */
+
+export async function createTable(table, signal) {
+  const url = new URL(`${API_BASE_URL}/tables`);
+  const options = {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ data: table }),
+    signal,
+  };
+  return await fetchJson(url, options, {});
+}
