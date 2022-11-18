@@ -212,3 +212,25 @@ export async function changeStatus(reservation_id, status, signal) {
   };
   return await fetchJson(url, options, { status });
 }
+
+/**
+ * Updates an existing reservation
+ * @param reservation
+ *  the updated reservation to save.
+ * @param reservation_id
+ *  the id of the reservation to update.
+ * @param signal
+ *  optional AbortController.signal
+ * @returns {Promise<Error|*>}
+ *  a promise that resolves to the updated reservation.
+ */
+export async function updateReservation(reservation, reservation_id, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}`;
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({ data: { ...reservation } }),
+    signal,
+  };
+  return await fetchJson(url, options, { ...reservation });
+}
