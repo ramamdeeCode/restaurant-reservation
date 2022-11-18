@@ -172,6 +172,20 @@ function tableIsFree(req, res, next) {
     : next();
 }
 
+async function unseat(req, res, next) {
+  const { table } = res.locals;
+  const updatedTable = {
+    ...table,
+    reservation_id: null,
+  };
+  const updatedReservation = {
+    ...res.locals.reservation,
+    status: "finished",
+  };
+  const data = await service.update(updatedTable, updatedReservation);
+  res.json({ data });
+}
+
 module.exports = {
   list: [asyncErrorBoundary(list)],
   listFree: [getCapacity, asyncErrorBoundary(listFree)],
@@ -193,4 +207,5 @@ module.exports = {
     tableIsFree,
     asyncErrorBoundary(seat),
   ],
+  unseat: [asyncErrorBoundary(tableExists), asyncErrorBoundary(unseat)],
 };
