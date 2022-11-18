@@ -100,7 +100,7 @@ function hasOnlyReservationId(req, res, next) {
   next();
 }
 
-function hasReservationId(res, res, next) {
+function hasReservationId(req, res, next) {
   const { data = {} } = req.body;
   return data.reservation_id
     ? next()
