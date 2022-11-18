@@ -172,3 +172,21 @@ export async function assignTable(reservation_id, table_id, signal) {
   };
   return await fetchJson(url, options, { reservation_id });
 }
+
+/**
+ * unassignes a reservation from a table.
+ * @param table_id
+ *  the id of the table to be unassigned.
+ * @param signal
+ *  optional AbortController.signal
+ * @returns {Promise<Error|*>}
+ *  a promise that resolves to the updated table.
+ */
+export async function unassignTable(table_id, signal) {
+  const url = `${API_BASE_URL}/tables/${table_id}/seat`;
+  const options = {
+    method: "DELETE",
+    signal,
+  };
+  return await fetchJson(url, options);
+}
