@@ -183,6 +183,20 @@ function tableIsOccupied(req, res, next) {
       });
 }
 
+async function findReservation(req, res, next) {
+  const { reservation_id } = res.locals.table;
+  const reservation = await reservationService.read(reservation_id);
+
+  if (reservation) {
+    res.locals.reservation = reservation;
+    return next();
+  }
+  next({
+    status: 404,
+    message: `Reservation ${reservation_id} cannot be found.`,
+  });
+}
+
 async function unseat(req, res, next) {
   const { table } = res.locals;
   const updatedTable = {
@@ -221,6 +235,7 @@ module.exports = {
   unseat: [
     asyncErrorBoundary(tableExists),
     tableIsOccupied,
+    asyncErrorBoundary(findReservation),
     asyncErrorBoundary(unseat),
   ],
 };
