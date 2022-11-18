@@ -121,3 +121,18 @@ export async function listTables(signal) {
   const url = new URL(`${API_BASE_URL}/tables`);
   return await fetchJson(url, { signal }, []);
 }
+
+/**
+ * Retrieves all unoccupied tables.
+ * @param signal
+ *  optional AbortController.signal
+ * @returns {Promise<[table]>}
+ *  a promise that resolves to a possible empty array of unoccupied tables from the database.
+ */
+export async function listFreeTables(params, signal) {
+  const url = new URL(`${API_BASE_URL}/tables/free`);
+  Object.entries(params).forEach(([key, value]) =>
+    url.searchParams.append(key, value.toString())
+  );
+  return await fetchJson(url, { headers, signal }, []);
+}
