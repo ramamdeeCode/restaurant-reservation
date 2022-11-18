@@ -172,6 +172,17 @@ function tableIsFree(req, res, next) {
     : next();
 }
 
+function tableIsOccupied(req, res, next) {
+  const { reservation_id } = res.locals.table;
+
+  return reservation_id
+    ? next()
+    : next({
+        status: 400,
+        message: `This table is nsot occupied.`,
+      });
+}
+
 async function unseat(req, res, next) {
   const { table } = res.locals;
   const updatedTable = {
@@ -207,5 +218,9 @@ module.exports = {
     tableIsFree,
     asyncErrorBoundary(seat),
   ],
-  unseat: [asyncErrorBoundary(tableExists), asyncErrorBoundary(unseat)],
+  unseat: [
+    asyncErrorBoundary(tableExists),
+    tableIsOccupied,
+    asyncErrorBoundary(unseat),
+  ],
 };
