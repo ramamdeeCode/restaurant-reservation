@@ -1,7 +1,7 @@
 const knex = require("../db/connection");
 
 async function list(date) {
-  return knex("reservation")
+  return knex("reservations")
     .select("*")
     .where({ status: "booked", reservation_date: date })
     .orWhere({ status: "seated", reservation_date: date })

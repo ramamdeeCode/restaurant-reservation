@@ -17,14 +17,14 @@ async function listFree(/* minCapacity */) {
 }
 
 async function create(table) {
-  return knex("table")
+  return knex("tables")
     .insert(table)
     .returning("*")
     .then((createdRecords) => createdRecords[0]);
 }
 
 async function read(table_id) {
-  return knex("table").select("*").where({ table_id }).first();
+  return knex("tables").select("*").where({ table_id }).first();
 }
 
 // uses knex transaction to update a table and a reservation at the same time

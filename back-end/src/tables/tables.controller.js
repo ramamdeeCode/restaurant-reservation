@@ -181,7 +181,7 @@ function tableIsOccupied(req, res, next) {
     ? next()
     : next({
         status: 400,
-        message: `This table is nsot occupied.`,
+        message: `not occupied`,
       });
 }
 
@@ -225,8 +225,8 @@ module.exports = {
   ],
 
   seat: [
-    hasReservationId,
     hasOnlyReservationId,
+    hasReservationId,
     asyncErrorBoundary(reservationIdExists),
     reservationIsBooked,
     asyncErrorBoundary(tableExists),
