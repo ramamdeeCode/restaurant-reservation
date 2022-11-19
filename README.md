@@ -8,8 +8,8 @@ Periodic Tables is a restaurant reservation system for fine dining restaurants. 
 
 ## LINKS
 
-- [Live App]("-----")
-- [Live Server]("----")
+- [Live App](https://restaurant-reservation-frontend-rsk4.onrender.com)
+- [Live Server](https://restaurant-reservation-backend-6unn.onrender.com)
 
 #
 
